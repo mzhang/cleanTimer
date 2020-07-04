@@ -32,6 +32,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:textColor="?attr/textColor"
+        android:maxLines="1"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
