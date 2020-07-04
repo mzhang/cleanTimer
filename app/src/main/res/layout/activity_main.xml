@@ -5,6 +5,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/bgColor"
     tools:context=".MainActivity">
 
     <TextView
@@ -14,6 +15,8 @@
         android:layout_marginTop="304dp"
         android:text="00:00:000"
         android:textSize="30sp"
+        android:textColor="?attr/textColor"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +31,8 @@
         android:layout_marginTop="64dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
+        android:textColor="?attr/textColor"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +43,8 @@
         android:layout_width="wrap_content"
         android:layout_height="84sp"
         android:layout_marginTop="100dp"
+        android:textColor="?attr/textColor"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,9 +55,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
+        android:textColor="?attr/textColor"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/displayedSolves" />
+
+    <TextView
+        android:id="@+id/lightSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="32dp"
+
+        android:textColor="?attr/textColor"
+        android:text="Change Theme 💡"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

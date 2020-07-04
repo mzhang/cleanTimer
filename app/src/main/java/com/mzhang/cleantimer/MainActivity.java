@@ -1,7 +1,7 @@
 package com.mzhang.cleantimer;
 
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.content.Intent;
 
 import java.lang.System;
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return textBox;
     }
+
     String formatTime(int input) {
         int secs = (int)(input / 1000);
         int mins = secs / 60;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         return output;
     }
+
     int listAverage(List<Integer> inputList) {
         double sum = 0;
         for (Integer value : inputList) {
@@ -79,12 +82,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.DarkTheme);
+        } else {
+            setTheme(R.style.LightTheme);
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_main);
 
         timer = findViewById(R.id.timer);
@@ -119,6 +131,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        TextView lightSwitch = findViewById(R.id.lightSwitch);
+        lightSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+
+                finish();
+                startActivity(new Intent(MainActivity.this, MainActivity.this.getClass()));
+            }
+        });
+
 
 
 
