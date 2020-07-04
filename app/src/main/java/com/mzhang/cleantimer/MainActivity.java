@@ -67,10 +67,9 @@ public class MainActivity extends AppCompatActivity {
         int mins = secs / 60;
         secs %= 60;
         int mills = (int)(input % 1000);
-        String output = String.format("%02d", mins) + ":" + String.format("%02d", secs)
+        return String.format("%02d", mins) + ":" + String.format("%02d", secs)
                 + ":" + String.format("%03d", mills);
 
-        return output;
     }
 
     int listAverage(List<Integer> inputList) {
@@ -88,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            setTheme(R.style.DarkTheme);
-        } else {
             setTheme(R.style.LightTheme);
+        } else {
+            setTheme(R.style.DarkTheme);
         }
 
         View decorView = getWindow().getDecorView();
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
 

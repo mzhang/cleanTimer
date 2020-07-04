@@ -3,4 +3,5 @@
     <attr name="bgColor" format="color"/>
     <attr name="textColor" format="reference|color"/>
     <attr name="metaTextColor" format="color"/>
+
 </resources>

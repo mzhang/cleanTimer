@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Clean Timer</string>
+    <string name="_00_00_000">00:00:000</string>
+    <string name="lightbulb">💡</string>
 </resources>
