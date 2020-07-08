@@ -5,12 +5,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.MotionEvent;
 import android.widget.TextView;
 import android.content.Intent;
+
 
 import java.lang.System;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Handler handler = new Handler();
     boolean isOn = false;
     boolean isDark = true;
+    boolean isPrimed = false;
     ArrayList<Integer> solvesList = new ArrayList<Integer>();
 
     Runnable updateTimer = new Runnable() {
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         return (int) sum / inputList.size();
     }
 
-    void displaySolveHistory(List<Integer> lastFiveList, TextView displayedSolves) {
+    void displayLastFive(List<Integer> lastFiveList, TextView displayedSolves) {
         String toPrint = "";
         for (int i = 0; i < lastFiveList.size(); i++) {
             toPrint += formatTime((lastFiveList.get(i))) + "\n";
@@ -95,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
     void saveDarkStatus() {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-
 
         if (isDark) {
             editor.putBoolean("isDark", true);
@@ -140,36 +143,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (isOn) {
-                            handler.removeCallbacks(updateTimer);
-                            isOn = !isOn;
-                            scramble.setText(newScramble());
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    long startTouch = System.currentTimeMillis();
 
-                            solvesList.add(time);
-                            List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
+                    if (isOn) {
+                        handler.removeCallbacks(updateTimer);
+                        isOn = !isOn;
+                        scramble.setText(newScramble());
 
-                            String toPrint = "";
-                            for (int i = 0; i < lastFiveList.size(); i++) {
-                                toPrint += formatTime((lastFiveList.get(i))) + "\n";
-                                displayedSolves.setText(toPrint);
-                            }
+                        solvesList.add(time);
+                        List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
 
-                            TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
-                            lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
-                        } else {
-                            startTime = System.nanoTime();
-                            handler.post(updateTimer);
-                            isOn = !isOn;
+                        String toPrint = "";
+                        for (int i = 0; i < lastFiveList.size(); i++) {
+                            toPrint += formatTime((lastFiveList.get(i))) + "\n";
+                            displayedSolves.setText(toPrint);
                         }
-                        return true;
-                    case MotionEvent.ACTION_UP:
+                        TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
+                        lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
+                    } else if (event.getDownTime() > 500) {
+                        isPrimed = true;
+                        
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                        return true;
+                        if (!isOn && isPrimed) {
+                        startTime = System.nanoTime();
+                        handler.post(updateTimer);
+                        isOn = !isOn;
+                        isPrimed = false;
+                    }
+
                 }
 
-                return false;
+                return true;
 
             }
         });
@@ -178,9 +185,7 @@ public class MainActivity extends AppCompatActivity {
         lightSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 isDark = !isDark;
-
                 finish();
                 startActivity(new Intent(MainActivity.this, MainActivity.this.getClass()));
             }
@@ -189,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onPause() {
         super.onPause();
-
         saveDarkStatus();
     }
 
