@@ -18,6 +18,7 @@ import android.content.Intent;
 
 
 import java.lang.System;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -80,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         int mills = (int) (input % 1000);
         return String.format("%02d", mins) + ":" + String.format("%02d", secs)
                 + ":" + String.format("%03d", mills);
-
     }
 
     int listAverage(List<Integer> inputList) {
@@ -91,12 +91,15 @@ public class MainActivity extends AppCompatActivity {
         return (int) sum / inputList.size();
     }
 
-    void displayLastFive(List<Integer> lastFiveList, TextView displayedSolves) {
+    void displayLastFive(ArrayList<Integer> solvesList, TextView displayedSolves) {
+        TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
+        List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
         String toPrint = "";
         for (int i = 0; i < lastFiveList.size(); i++) {
             toPrint += formatTime((lastFiveList.get(i))) + "\n";
             displayedSolves.setText(toPrint);
         }
+        lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
     }
 
     void saveDarkStatus() {
@@ -112,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    void removeLastSolve(ArrayList<Integer> solvesList)
+    {
+        solvesList.remove(solvesList.size()-1);
+    }
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -169,6 +176,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, MainActivity.this.getClass()));
             }
         });
+
+        TextView discard = findViewById(R.id.discard);
+        discard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeLastSolve(solvesList);
+                displayLastFive(solvesList, displayedSolves);
+            }
+        });
     }
 
     protected void onPause() {
@@ -187,26 +203,24 @@ public class MainActivity extends AppCompatActivity {
                 scramble.setText(newScramble());
 
                 solvesList.add(time);
-                List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
 
-                String toPrint = "";
-                for (int i = 0; i < lastFiveList.size(); i++) {
-                    toPrint += formatTime((lastFiveList.get(i))) + "\n";
-                    displayedSolves.setText(toPrint);
-                }
-                TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
-                lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
+
+                displayLastFive(solvesList, displayedSolves);
+
+
+
             }
             return true;
         }
 
         @Override
         public void onLongPress(MotionEvent motionEvent) {
-            timer.setText("PRIMED");
             isPrimed = true;
+
+            startTime = System.nanoTime();
+            handler.post(updateTimer);
+
         }
-
-
     }
 
 }
