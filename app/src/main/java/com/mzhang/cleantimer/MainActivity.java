@@ -108,12 +108,18 @@ public class MainActivity extends AppCompatActivity {
     void displayLastFive(ArrayList<Integer> solvesList, TextView displayedSolves) {
         TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
         List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
-        String toPrint = "";
-        for (int i = 0; i < lastFiveList.size(); i++) {
-            toPrint += formatTime((lastFiveList.get(i))) + "\n";
-            displayedSolves.setText(toPrint);
+
+        if (lastFiveList.size() > 0) {
+            lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
+            String toPrint = "";
+            for (int i = 0; i < lastFiveList.size(); i++) {
+                toPrint += formatTime((lastFiveList.get(i))) + "\n";
+                displayedSolves.setText(toPrint);
+            }
+        } else {
+            lastFiveAverage.setText("");
+            displayedSolves.setText("");
         }
-        lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
     }
 
     void saveDarkStatus() {
@@ -131,7 +137,11 @@ public class MainActivity extends AppCompatActivity {
 
     void removeLastSolve(ArrayList<Integer> solvesList)
     {
-        solvesList.remove(solvesList.size()-1);
+        try {
+            solvesList.remove(solvesList.size() - 1);
+        } catch(Exception e) {
+            System.out.println("No solves left in list!");
+        }
     }
 
     void vibrate(View layout) {
