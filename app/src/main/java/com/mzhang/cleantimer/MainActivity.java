@@ -2,6 +2,8 @@ package com.mzhang.cleantimer;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.core.view.MotionEventCompat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +11,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.GestureDetector;
+
 import android.view.View;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     boolean isDark = true;
     boolean isPrimed = false;
     ArrayList<Integer> solvesList = new ArrayList<Integer>();
+    GestureDetector detector;
+    View.OnTouchListener listener;
 
     Runnable updateTimer = new Runnable() {
         @Override
@@ -109,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,49 +142,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         timer = findViewById(R.id.timer);
-        ConstraintLayout layout = findViewById(R.id.layout);
+        final ConstraintLayout layout = findViewById(R.id.layout);
         final TextView displayedSolves = findViewById(R.id.displayedSolves);
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
 
+        detector = new GestureDetector(this, new LayoutGestureDetector());
         layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    long startTouch = System.currentTimeMillis();
-
-                    if (isOn) {
-                        handler.removeCallbacks(updateTimer);
-                        isOn = !isOn;
-                        scramble.setText(newScramble());
-
-                        solvesList.add(time);
-                        List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
-
-                        String toPrint = "";
-                        for (int i = 0; i < lastFiveList.size(); i++) {
-                            toPrint += formatTime((lastFiveList.get(i))) + "\n";
-                            displayedSolves.setText(toPrint);
-                        }
-                        TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
-                        lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
-                    } else if (event.getDownTime() > 500) {
-                        isPrimed = true;
-                        
-                    }
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                        if (!isOn && isPrimed) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (!isOn && isPrimed) {
                         startTime = System.nanoTime();
                         handler.post(updateTimer);
                         isOn = !isOn;
                         isPrimed = false;
                     }
-
                 }
-
-                return true;
+                return detector.onTouchEvent(event);
 
             }
         });
@@ -195,6 +178,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         saveDarkStatus();
+    }
+
+    class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent motionEvent) {
+            final TextView displayedSolves = findViewById(R.id.displayedSolves);
+            final TextView scramble = findViewById(R.id.scramble);
+            if (isOn) {
+                handler.removeCallbacks(updateTimer);
+                isOn = !isOn;
+                scramble.setText(newScramble());
+
+                solvesList.add(time);
+                List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
+
+                String toPrint = "";
+                for (int i = 0; i < lastFiveList.size(); i++) {
+                    toPrint += formatTime((lastFiveList.get(i))) + "\n";
+                    displayedSolves.setText(toPrint);
+                }
+                TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
+                lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
+            } else {
+                isPrimed = true;
+            }
+            return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent motionEvent) {
+            isPrimed = true;
+        }
+
+
+
     }
 
 }
