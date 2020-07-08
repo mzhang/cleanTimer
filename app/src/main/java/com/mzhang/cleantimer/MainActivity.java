@@ -98,9 +98,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            setTheme(R.style.LightTheme);
-        } else {
+
+        try {
+            SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
+            Boolean isDark = pref.getBoolean("isDark", true);
+            if (isDark) {
+                setTheme(R.style.DarkTheme);
+            } else {
+                setTheme(R.style.LightTheme);
+            }
+        } catch(Exception e) {
             setTheme(R.style.DarkTheme);
         }
 
@@ -119,11 +126,6 @@ public class MainActivity extends AppCompatActivity {
         final TextView displayedSolves = findViewById(R.id.displayedSolves);
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
-
-
-        if (savedInstanceState != null) {
-            solvesList.add(savedInstanceState.getInt("SOLVE"));
-        }
 
 
         layout.setOnTouchListener(new View.OnTouchListener() {
@@ -184,14 +186,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
-        for (int i = 0; i < solvesList.size(); i++) {
-            editor.putInt("SOLVE", solvesList.get(i));
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            editor.putBoolean("isDark", true);
+        } else {
+            editor.putBoolean("isDark", false);
         }
 
-        editor.apply();
+        editor.commit();
     }
 
 }
