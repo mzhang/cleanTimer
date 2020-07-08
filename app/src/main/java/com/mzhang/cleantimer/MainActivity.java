@@ -2,8 +2,6 @@ package com.mzhang.cleantimer;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.MotionEventCompat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -39,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     boolean isPrimed = false;
     ArrayList<Integer> solvesList = new ArrayList<Integer>();
     GestureDetector detector;
-    View.OnTouchListener listener;
 
     Runnable updateTimer = new Runnable() {
         @Override
@@ -160,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 return detector.onTouchEvent(event);
-
             }
         });
 
@@ -200,17 +196,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
                 lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
-            } else {
-                isPrimed = true;
             }
             return true;
         }
 
         @Override
         public void onLongPress(MotionEvent motionEvent) {
+            timer.setText("PRIMED");
             isPrimed = true;
         }
-
 
 
     }
