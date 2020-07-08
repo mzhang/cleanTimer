@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 import android.annotation.SuppressLint;
 
 
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     int time;
     TextView timer;
     Handler handler = new Handler();
-    boolean isOn = false;
+    boolean isMainTimerOn = false;
     boolean isDark = true;
     boolean isPrimed = false;
     ArrayList<Integer> solvesList = new ArrayList<Integer>();
@@ -46,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
             time = (int) recorded;
             timer.setText(formatTime(time));
             handler.postDelayed(this, 0);
+
+        }
+    };
+
+    Runnable updateInspectTimer = new Runnable() {
+        @Override
+        public void run() {
+            recorded = (System.nanoTime() - startTime) / 1000000;
+            time = (int) recorded;
+            timer.setText(formatTime(15000 - time));
+            handler.postDelayed(this, 0);
+
         }
     };
 
@@ -120,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
         solvesList.remove(solvesList.size()-1);
     }
 
+    void vibrate(View layout) {
+        layout.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -151,15 +168,42 @@ public class MainActivity extends AppCompatActivity {
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
 
+        class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {
+            @Override
+            public boolean onDown(MotionEvent motionEvent) {
+                if (isMainTimerOn) {
+                    handler.removeCallbacks(updateTimer);
+                    isMainTimerOn = !isMainTimerOn;
+                    scramble.setText(newScramble());
+
+                    solvesList.add(time);
+                    displayLastFive(solvesList, displayedSolves);
+                }
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent motionEvent) {
+                isPrimed = true;
+                final TextView scramble = findViewById(R.id.scramble);
+
+                scramble.setText("Begin inspection!");
+
+                startTime = System.nanoTime();
+                handler.post(updateInspectTimer);
+            }
+        }
+
         detector = new GestureDetector(this, new LayoutGestureDetector());
         layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (!isOn && isPrimed) {
+                    handler.removeCallbacks(updateInspectTimer);
+                    if (!isMainTimerOn && isPrimed) {
                         startTime = System.nanoTime();
                         handler.post(updateTimer);
-                        isOn = !isOn;
+                        isMainTimerOn = !isMainTimerOn;
                         isPrimed = false;
                     }
                 }
@@ -192,36 +236,7 @@ public class MainActivity extends AppCompatActivity {
         saveDarkStatus();
     }
 
-    class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent motionEvent) {
-            final TextView displayedSolves = findViewById(R.id.displayedSolves);
-            final TextView scramble = findViewById(R.id.scramble);
-            if (isOn) {
-                handler.removeCallbacks(updateTimer);
-                isOn = !isOn;
-                scramble.setText(newScramble());
 
-                solvesList.add(time);
-
-
-                displayLastFive(solvesList, displayedSolves);
-
-
-
-            }
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent motionEvent) {
-            isPrimed = true;
-
-            startTime = System.nanoTime();
-            handler.post(updateTimer);
-
-        }
-    }
 
 }
 
