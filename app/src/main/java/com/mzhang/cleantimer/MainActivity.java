@@ -4,11 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.MotionEvent;
 import android.widget.TextView;
 import android.content.Intent;
 
@@ -16,6 +17,9 @@ import java.lang.System;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import android.annotation.SuppressLint;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         Random rand = new Random();
         String textBox = "";
         char[] moves = {'U', 'R', 'F', 'D', 'L', 'B'};
-        int numberOfMoves = rand.nextInt(6) + 20; //rand # 0..25
+        int numberOfMoves = rand.nextInt(6) + 20; //rand # 20..25
 
         for (int i = 0; i < numberOfMoves; i++) {
             int moveKey = rand.nextInt(6);
@@ -63,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     String formatTime(int input) {
-        int secs = (int)(input / 1000);
+        int secs = (int) (input / 1000);
         int mins = secs / 60;
         secs %= 60;
-        int mills = (int)(input % 1000);
+        int mills = (int) (input % 1000);
         return String.format("%02d", mins) + ":" + String.format("%02d", secs)
                 + ":" + String.format("%03d", mills);
 
@@ -80,12 +84,20 @@ public class MainActivity extends AppCompatActivity {
         return (int) sum / inputList.size();
     }
 
+    void displaySolveHistory(List<Integer> lastFiveList, TextView displayedSolves) {
+        String toPrint = "";
+        for (int i = 0; i < lastFiveList.size(); i++) {
+            toPrint += formatTime((lastFiveList.get(i))) + "\n";
+            displayedSolves.setText(toPrint);
+        }
+    }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.LightTheme);
         } else {
@@ -100,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_main);
 
         timer = findViewById(R.id.timer);
@@ -109,30 +120,47 @@ public class MainActivity extends AppCompatActivity {
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
 
-        layout.setOnClickListener(new View.OnClickListener() {
+
+        if (savedInstanceState != null) {
+            solvesList.add(savedInstanceState.getInt("SOLVE"));
+        }
+
+
+        layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                if (isOn) {
-                    handler.removeCallbacks(updateTimer);
-                    isOn = !isOn;
-                    scramble.setText(newScramble());
+            public boolean onTouch(View v, MotionEvent event) {
 
-                    solvesList.add(time);
-                    List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (isOn) {
+                            handler.removeCallbacks(updateTimer);
+                            isOn = !isOn;
+                            scramble.setText(newScramble());
 
-                    String toPrint = "";
-                    for (int i = 0; i < lastFiveList.size(); i++) {
-                        toPrint += formatTime((lastFiveList.get(i))) + "\n";
-                        displayedSolves.setText(toPrint);
-                    }
+                            solvesList.add(time);
+                            List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
 
-                    TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
-                    lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
-                } else {
-                    startTime = System.nanoTime();
-                    handler.post(updateTimer);
-                    isOn = !isOn;
+                            String toPrint = "";
+                            for (int i = 0; i < lastFiveList.size(); i++) {
+                                toPrint += formatTime((lastFiveList.get(i))) + "\n";
+                                displayedSolves.setText(toPrint);
+                            }
+
+                            TextView lastFiveAverage = (TextView) findViewById(R.id.lastFiveAverage);
+                            lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
+                        } else {
+                            startTime = System.nanoTime();
+                            handler.post(updateTimer);
+                            isOn = !isOn;
+                        }
+                        return true;
+                    case MotionEvent.ACTION_UP:
+
+                        return true;
                 }
+
+                return false;
+
             }
         });
 
@@ -151,10 +179,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, MainActivity.this.getClass()));
             }
         });
-
-
-
-
-
     }
+
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        for (int i = 0; i < solvesList.size(); i++) {
+            editor.putInt("SOLVE", solvesList.get(i));
+        }
+
+        editor.apply();
+    }
+
 }
+
