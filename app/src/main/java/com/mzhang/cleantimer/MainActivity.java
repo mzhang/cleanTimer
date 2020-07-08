@@ -1,7 +1,6 @@
 package com.mzhang.cleantimer;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
@@ -29,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     TextView timer;
     Handler handler = new Handler();
     boolean isOn = false;
+    boolean isDark = true;
     ArrayList<Integer> solvesList = new ArrayList<Integer>();
 
     Runnable updateTimer = new Runnable() {
@@ -92,6 +92,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void saveDarkStatus() {
+        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+
+        if (isDark) {
+            editor.putBoolean("isDark", true);
+        } else {
+            editor.putBoolean("isDark", false);
+        }
+
+        editor.apply();
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -99,16 +112,12 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        try {
-            SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
-            Boolean isDark = pref.getBoolean("isDark", true);
-            if (isDark) {
-                setTheme(R.style.DarkTheme);
-            } else {
-                setTheme(R.style.LightTheme);
-            }
-        } catch(Exception e) {
+        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
+        isDark = pref.getBoolean("isDark", true);
+        if (isDark) {
             setTheme(R.style.DarkTheme);
+        } else {
+            setTheme(R.style.LightTheme);
         }
 
         View decorView = getWindow().getDecorView();
@@ -126,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
         final TextView displayedSolves = findViewById(R.id.displayedSolves);
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
-
 
         layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -171,11 +179,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                }
+                isDark = !isDark;
 
                 finish();
                 startActivity(new Intent(MainActivity.this, MainActivity.this.getClass()));
@@ -186,16 +190,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            editor.putBoolean("isDark", true);
-        } else {
-            editor.putBoolean("isDark", false);
-        }
-
-        editor.commit();
+        saveDarkStatus();
     }
 
 }
