@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = pref.edit();
 
         for (int i=0; i<solvesList.size(); i++) {
-            editor.putInt("solve_" + i + pref.getAll().size(), solvesList.get(i));
+            editor.putInt("solve_" + (i + pref.getAll().size()), solvesList.get(i));
         }
 
         editor.apply();
