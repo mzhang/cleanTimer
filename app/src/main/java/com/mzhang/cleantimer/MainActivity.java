@@ -142,6 +142,19 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    void saveSolvesList(ArrayList<Integer> solvesList) {
+        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        for (int i=0; i<solvesList.size(); i++) {
+            editor.putInt("solve_" + i + pref.getAll().size(), solvesList.get(i));
+        }
+
+        editor.apply();
+    }
+
+
+
     void removeLastSolve(ArrayList<Integer> solvesList)
     {
         try {
@@ -201,7 +214,6 @@ public class MainActivity extends AppCompatActivity {
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
 
-
         class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {
             @Override
             public boolean onDown(MotionEvent motionEvent) {
@@ -220,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
             public void onLongPress(MotionEvent motionEvent) {
                 isPrimed = true;
                 final TextView scramble = findViewById(R.id.scramble);
-
                 scramble.setText("Begin inspection!");
                 startInspectionTimer();
             }
@@ -263,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         saveDarkStatus();
+        saveSolvesList(solvesList);
     }
 
 
