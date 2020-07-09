@@ -12,14 +12,14 @@
         <item name="textColor">#000000</item>
         <item name="metaTextColor">#606060</item>
         <item name="bgColor">#ffffff</item>
-        <item name="colorControlHighlight">#aa919191</item>
+        <item name="colorControlHighlight">#454545</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="textColor">#ffffff</item>
         <item name="metaTextColor">#aeaeae</item>
         <item name="bgColor">#000000</item>
-        <item name="colorControlHighlight">#aaaeaeae</item>
+        <item name="colorControlHighlight">#202020</item>
     </style>
 
 </resources>

@@ -5,14 +5,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.GestureDetector;
 
-import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -20,7 +17,6 @@ import android.content.Intent;
 
 
 import java.lang.System;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -195,9 +191,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.isDark", Context.MODE_PRIVATE);
         isDark = pref.getBoolean("isDark", true);
         if (isDark) {
@@ -247,6 +241,26 @@ public class MainActivity extends AppCompatActivity {
                 scramble.setText("Begin inspection!");
                 startInspectionTimer();
             }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                final int SWIPE_MIN_DISTANCE = 80;
+                final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    return false; // Right to left
+                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    return false; // Left to right
+                }
+
+                if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                    startActivity(new Intent(MainActivity.this, stats.class));
+                    return false; // Bottom to top
+                }  else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                    return false; // Top to bottom
+                }
+                return true;
+            }
         }
 
         detector = new GestureDetector(this, new LayoutGestureDetector());
@@ -288,8 +302,4 @@ public class MainActivity extends AppCompatActivity {
         saveDarkStatus();
         saveSolvesList(solvesList);
     }
-
-
-
 }
-
