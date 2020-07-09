@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> solvesList = new ArrayList<Integer>();
     GestureDetector detector;
 
+
     Runnable updateTimer = new Runnable() {
         @Override
         public void run() {
@@ -56,12 +57,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             recorded = (System.nanoTime() - startTime) / 1000000;
-            time = (int) recorded;
-            timer.setText(formatTime(15000 - time));
-            handler.postDelayed(this, 0);
-
+            time = 15000-(int) recorded;
+            if (time < 0) {
+                startMainTimer();
+                handler.removeCallbacks(updateInspectTimer);
+            } else {
+                timer.setText(formatTime(time));
+                handler.postDelayed(this, 0);
+            }
         }
     };
+
+
 
     String newScramble() {
         Random rand = new Random();
@@ -144,8 +151,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void vibrate(View layout) {
-        layout.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+    void vibrate() {
+        findViewById(R.id.layout).performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+    }
+
+    void startMainTimer() {
+        startTime = System.nanoTime();
+        handler.post(updateTimer);
+        isMainTimerOn = !isMainTimerOn;
+        isPrimed = false;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -198,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
                 final TextView scramble = findViewById(R.id.scramble);
 
                 scramble.setText("Begin inspection!");
-
                 startTime = System.nanoTime();
                 handler.post(updateInspectTimer);
             }
@@ -211,10 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     handler.removeCallbacks(updateInspectTimer);
                     if (!isMainTimerOn && isPrimed) {
-                        startTime = System.nanoTime();
-                        handler.post(updateTimer);
-                        isMainTimerOn = !isMainTimerOn;
-                        isPrimed = false;
+                        startMainTimer();
                     }
                 }
                 return detector.onTouchEvent(event);
