@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-
     String newScramble() {
         Random rand = new Random();
         String textBox = "";
@@ -147,13 +145,23 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = pref.edit();
 
         for (int i=0; i<solvesList.size(); i++) {
-            editor.putInt("solve_" + (i + pref.getAll().size()), solvesList.get(i));
+            editor.putInt(Integer.toString(i + pref.getAll().size()), solvesList.get(i));
         }
 
         editor.apply();
     }
 
+    ArrayList<Integer> loadSolvesList(Integer numberOfMostRecent) {
+        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
 
+        ArrayList<Integer> toReturn = new ArrayList<>();
+        Integer startIndex = Math.max(pref.getAll().size() - numberOfMostRecent, 0);
+        for(int i = startIndex; i < pref.getAll().size(); i++)
+        {
+            toReturn.add(pref.getInt(Integer.toString(i), 0));
+        }
+        return toReturn;
+    }
 
     void removeLastSolve(ArrayList<Integer> solvesList)
     {
@@ -213,6 +221,10 @@ public class MainActivity extends AppCompatActivity {
         final TextView displayedSolves = findViewById(R.id.displayedSolves);
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
+
+        solvesList = loadSolvesList(5);
+        displayLastFive(solvesList, displayedSolves);
+        solvesList.clear();
 
         class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {
             @Override
