@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.GestureDetector;
 
@@ -42,14 +43,13 @@ public class MainActivity extends AppCompatActivity {
     GestureDetector detector;
 
 
-    Runnable updateTimer = new Runnable() {
+    Runnable updateMainTimer = new Runnable() {
         @Override
         public void run() {
             recorded = (System.nanoTime() - startTime) / 1000000;
             time = (int) recorded;
             timer.setText(formatTime(time));
             handler.postDelayed(this, 0);
-
         }
     };
 
@@ -150,18 +150,27 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("No solves left in list!");
         }
     }
-
+    
     void vibrate() {
-        findViewById(R.id.layout).performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+        Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibe.vibrate(10);
     }
 
     void startMainTimer() {
+        vibrate();
         startTime = System.nanoTime();
-        handler.post(updateTimer);
+        handler.post(updateMainTimer);
         isMainTimerOn = !isMainTimerOn;
         isPrimed = false;
     }
 
+    void startInspectionTimer() {
+        vibrate();
+        handler.removeCallbacks(updateMainTimer);
+        startTime = System.nanoTime();
+        handler.post(updateInspectTimer);
+    }
+    
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,11 +201,12 @@ public class MainActivity extends AppCompatActivity {
         final TextView scramble = findViewById(R.id.scramble);
         scramble.setText(newScramble());
 
+
         class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {
             @Override
             public boolean onDown(MotionEvent motionEvent) {
                 if (isMainTimerOn) {
-                    handler.removeCallbacks(updateTimer);
+                    handler.removeCallbacks(updateMainTimer);
                     isMainTimerOn = !isMainTimerOn;
                     scramble.setText(newScramble());
 
@@ -212,8 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 final TextView scramble = findViewById(R.id.scramble);
 
                 scramble.setText("Begin inspection!");
-                startTime = System.nanoTime();
-                handler.post(updateInspectTimer);
+                startInspectionTimer();
             }
         }
 
