@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     
     void vibrate() {
         Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        vibe.vibrate(10);
+        vibe.vibrate(25);
     }
 
     void startMainTimer() {
