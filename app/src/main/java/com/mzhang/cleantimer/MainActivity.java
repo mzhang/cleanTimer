@@ -103,7 +103,11 @@ public class MainActivity extends AppCompatActivity {
         for (Integer value : inputList) {
             sum += value;
         }
-        return (int) sum / inputList.size();
+        try {
+            return (int) sum / inputList.size();
+        } catch(Exception e) {
+            return (int) sum;
+        }
     }
 
     void displayLastFive(ArrayList<Integer> solvesList, TextView displayedSolves) {
@@ -257,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, stats.class));
                     return false; // Bottom to top
                 }  else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                    startActivity(new Intent(MainActivity.this, stats.class));
                     return false; // Top to bottom
                 }
                 return true;
