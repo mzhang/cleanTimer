@@ -2,6 +2,10 @@ package com.mzhang.cleantimer;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -135,8 +139,41 @@ public class stats extends AppCompatActivity {
         averageof100value.setText(returnAverageOf(solvesList, 100));
         averageofcareervalue.setText(formatTime(listAverage(solvesList)));
 
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+        ArrayList<Integer> last25 = loadSolvesList(25);
+        ArrayList<String> last25String = new ArrayList<String>();
+        for (int i=0; i < last25.size(); i++) {
+            last25String.add(formatTime(last25.get(i)));
+        }
+
+        final RecyclerView.Adapter adapter = new CustomAdapter(last25String);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target){
+                return false;
+            }
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                // Remove item from backing list here
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
 
     }
-
+    private List<String> generateData() {
+        List<String> data = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            data.add(String.valueOf(i) + "th Element");
+        }
+        return data;
+    }
 
 }

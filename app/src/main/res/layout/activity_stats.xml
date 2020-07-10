@@ -33,10 +33,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:gravity="center"
                 android:text="Average of 5"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -46,10 +46,10 @@
                 android:layout_width="142dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="24dp"
+                android:gravity="center"
                 android:text=""
                 android:textColor="?attr/textColor"
                 android:textSize="24sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/averageof5title" />
@@ -72,10 +72,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:gravity="center"
                 android:text="Average of 25"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -85,15 +85,14 @@
                 android:layout_width="142dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="24dp"
+                android:gravity="center"
                 android:text=""
                 android:textColor="?attr/textColor"
                 android:textSize="24sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/averageof25title" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -112,10 +111,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:gravity="center"
                 android:text="Average of 100"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -125,10 +124,10 @@
                 android:layout_width="142dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="24dp"
+                android:gravity="center"
                 android:text=""
                 android:textColor="?attr/textColor"
                 android:textSize="24sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/averageof100title" />
@@ -150,10 +149,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:gravity="center"
                 android:text="Average of Career"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -163,14 +162,23 @@
                 android:layout_width="142dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="24dp"
+                android:gravity="center"
                 android:text=""
                 android:textColor="?attr/textColor"
                 android:textSize="24sp"
-                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/averageofcareertitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
