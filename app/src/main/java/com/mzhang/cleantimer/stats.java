@@ -142,13 +142,12 @@ public class stats extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-        ArrayList<Integer> last25 = loadSolvesList(25);
-        ArrayList<String> last25String = new ArrayList<String>();
-        for (int i=0; i < last25.size(); i++) {
-            last25String.add(formatTime(last25.get(i)));
+        final ArrayList<String> solvesListString = new ArrayList<String>();
+        for (int i=0; i < solvesList.size(); i++) {
+            solvesListString.add(formatTime(solvesList.get(i)));
         }
 
-        final RecyclerView.Adapter adapter = new CustomAdapter(last25String);
+        final RecyclerView.Adapter adapter = new CustomAdapter(solvesListString);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
@@ -161,6 +160,7 @@ public class stats extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Remove item from backing list here
+                solvesListString.remove(viewHolder.getAdapterPosition());
                 adapter.notifyDataSetChanged();
             }
         });
@@ -168,13 +168,6 @@ public class stats extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-    }
-    private List<String> generateData() {
-        List<String> data = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            data.add(String.valueOf(i) + "th Element");
-        }
-        return data;
     }
 
 }
