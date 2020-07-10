@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class stats extends AppCompatActivity {
             }
         }
 
-        ConstraintLayout layout = findViewById(R.id.statsLayout);
+        LinearLayout layout = findViewById(R.id.statsLayout);
         layout.setLongClickable(true);
         detector = new GestureDetector(this, new LayoutGestureDetector());
         layout.setOnTouchListener(new View.OnTouchListener() {
@@ -150,7 +151,7 @@ public class stats extends AppCompatActivity {
         final RecyclerView.Adapter adapter = new CustomAdapter(last25String);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
