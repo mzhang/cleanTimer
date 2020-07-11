@@ -24,16 +24,16 @@ import java.util.List;
 public class stats extends AppCompatActivity {
     boolean isDark = true;
     ArrayList<Integer> solvesList = new ArrayList<Integer>();
+
     GestureDetector detector;
 
-    void saveSolvesList(ArrayList<Integer> solvesList) {
+    void overwriteSolvesList(ArrayList<Integer> solvesList) {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-
+        editor.clear();
         for (int i=0; i<solvesList.size(); i++) {
             editor.putInt(Integer.toString(i + pref.getAll().size()), solvesList.get(i));
         }
-
         editor.apply();
     }
 
@@ -44,6 +44,14 @@ public class stats extends AppCompatActivity {
         int mills = (int) (input % 1000);
         return String.format("%02d", mins) + ":" + String.format("%02d", secs)
                 + ":" + String.format("%03d", mills);
+    }
+
+    Integer unFormatTime(String input) {
+        String[] tokens = input.split(":");
+        int mins = Integer.parseInt(tokens[0]);
+        int secs = Integer.parseInt(tokens[1]);
+        int mills = Integer.parseInt(tokens[2]);
+        return mins * 60000 + secs * 1000 + mills;
     }
 
     ArrayList<Integer> loadSolvesList(Integer numberOfMostRecent) {
@@ -130,10 +138,10 @@ public class stats extends AppCompatActivity {
 
         solvesList = loadSolvesList(1000);
 
-        TextView averageof5value = findViewById(R.id.averageof5value);
-        TextView averageof25value = findViewById(R.id.averageof25value);
-        TextView averageof100value = findViewById(R.id.averageof100value);
-        TextView averageofcareervalue = findViewById(R.id.averageofcareervalue);
+        final TextView averageof5value = findViewById(R.id.averageof5value);
+        final TextView averageof25value = findViewById(R.id.averageof25value);
+        final TextView averageof100value = findViewById(R.id.averageof100value);
+        final TextView averageofcareervalue = findViewById(R.id.averageofcareervalue);
 
         averageof5value.setText(returnAverageOf(solvesList, 5));
         averageof25value.setText(returnAverageOf(solvesList, 25));
@@ -146,6 +154,8 @@ public class stats extends AppCompatActivity {
         for (int i=0; i < solvesList.size(); i++) {
             solvesListString.add(formatTime(solvesList.get(i)));
         }
+        SharedPreferences solvesMasterList = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = solvesMasterList.edit();
 
         final RecyclerView.Adapter adapter = new CustomAdapter(solvesListString);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -160,14 +170,32 @@ public class stats extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Remove item from backing list here
+                editor.remove(Integer.toString(viewHolder.getAdapterPosition()));
+                editor.apply();
+
                 solvesListString.remove(viewHolder.getAdapterPosition());
                 adapter.notifyDataSetChanged();
+                solvesList = loadSolvesList(1000);
+                averageof5value.setText(returnAverageOf(solvesList, 5));
+                averageof25value.setText(returnAverageOf(solvesList, 25));
+                averageof100value.setText(returnAverageOf(solvesList, 100));
+                averageofcareervalue.setText(formatTime(listAverage(solvesList)));
+
             }
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
-
     }
+//    protected void onPause() {
+//        super.onPause();
+//        solvesList.clear();
+
+//        for (int i=0; i < solvesListString.size(); i++) {
+//            System.out.print(unFormatTime(solvesListString.get(i)));
+//            solvesList.add(unFormatTime(solvesListString.get(i)));
+//        }
+//
+//        overwriteSolvesList(solvesList);
+//    }
 
 }
