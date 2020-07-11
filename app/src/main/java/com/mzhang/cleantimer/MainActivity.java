@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
             recorded = (System.nanoTime() - startTime) / 1000000;
             time = 15000-(int) recorded;
             if (time < 0) {
+                TextView scramble = findViewById(R.id.scramble);
+                scramble.setText("Go!");
                 startMainTimer();
                 handler.removeCallbacks(updateInspectTimer);
             } else {
@@ -151,8 +153,6 @@ public class MainActivity extends AppCompatActivity {
             prefix = ",";
             toSave.append(solvesList.get(i));
         }
-
-        System.out.println(toSave);
 
         editor.putString("list", toSave.toString());
         editor.apply();
@@ -288,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     handler.removeCallbacks(updateInspectTimer);
                     if (!isMainTimerOn && isPrimed) {
+                        scramble.setText("Go!");
                         startMainTimer();
                     }
                 }

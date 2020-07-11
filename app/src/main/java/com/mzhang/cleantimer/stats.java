@@ -49,8 +49,6 @@ public class stats extends AppCompatActivity {
             toSave.append(solvesList.get(i));
         }
 
-        System.out.println(toSave);
-
         editor.putString("list", toSave.toString());
         editor.apply();
     }
