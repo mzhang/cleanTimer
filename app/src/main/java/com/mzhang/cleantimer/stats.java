@@ -154,6 +154,7 @@ public class stats extends AppCompatActivity {
         for (int i=0; i < solvesList.size(); i++) {
             solvesListString.add(formatTime(solvesList.get(i)));
         }
+
         SharedPreferences solvesMasterList = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = solvesMasterList.edit();
 
@@ -175,12 +176,12 @@ public class stats extends AppCompatActivity {
 
                 solvesListString.remove(viewHolder.getAdapterPosition());
                 adapter.notifyDataSetChanged();
+
                 solvesList = loadSolvesList(1000);
                 averageof5value.setText(returnAverageOf(solvesList, 5));
                 averageof25value.setText(returnAverageOf(solvesList, 25));
                 averageof100value.setText(returnAverageOf(solvesList, 100));
                 averageofcareervalue.setText(formatTime(listAverage(solvesList)));
-
             }
         });
 

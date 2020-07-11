@@ -144,10 +144,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
-        for (int i=0; i<solvesList.size(); i++) {
-            editor.putInt(Integer.toString(i + pref.getAll().size()), solvesList.get(i));
-        }
+        editor.putInt("size", solvesList.size() + pref.getInt("size", 0));
 
+        StringBuilder toSave = new StringBuilder();
+        for (int i=0; i<solvesList.size(); i++) {
+            toSave.append(solvesList.get(i));
+            toSave.append(",");
+        }
+        editor.putString("list", toSave.toString());
         editor.apply();
     }
 
@@ -155,10 +159,11 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
 
         ArrayList<Integer> toReturn = new ArrayList<>();
-        Integer startIndex = Math.max(pref.getAll().size() - numberOfMostRecent, 0);
-        for(int i = startIndex; i < pref.getAll().size(); i++)
-        {
-            toReturn.add(pref.getInt(Integer.toString(i), 0));
+        String toParse = pref.getString("list", "1337");
+        String[] tokens = toParse.split(",");
+        int startIndex = Math.max(tokens.length - numberOfMostRecent, 0);
+        for (int i = startIndex; i < tokens.length; i++) {
+            toReturn.add(Integer.parseInt(tokens[i]));
         }
         return toReturn;
     }
