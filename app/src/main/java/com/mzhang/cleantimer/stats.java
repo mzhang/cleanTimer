@@ -41,8 +41,6 @@ public class stats extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
-        editor.putInt("size", solvesList.size() + pref.getInt("size", 0));
-
         StringBuilder toSave = new StringBuilder();
         String prefix = "";
         for (int i=0; i<solvesList.size(); i++) {
@@ -61,6 +59,10 @@ public class stats extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
 
         ArrayList<Integer> toReturn = new ArrayList<>();
+        if (pref.getAll().size() == 0) {
+            toReturn.add(0);
+            return toReturn;
+        }
         String toParse = pref.getString("list", "1337");
         String[] tokens = toParse.split(",");
         int startIndex = Math.max(tokens.length - numberOfMostRecent, 0);
