@@ -176,9 +176,9 @@ public class stats extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Remove item from backing list here
                 solvesListString.remove(viewHolder.getAdapterPosition());
+                solvesList.remove(viewHolder.getAdapterPosition());
                 adapter.notifyDataSetChanged();
 
-                solvesList.remove(viewHolder.getAdapterPosition());
                 averageof5value.setText(returnAverageOf(solvesList, 5));
                 averageof25value.setText(returnAverageOf(solvesList, 25));
                 averageof100value.setText(returnAverageOf(solvesList, 100));
