@@ -27,15 +27,6 @@ public class stats extends AppCompatActivity {
 
     GestureDetector detector;
 
-    void overwriteSolvesList(ArrayList<Integer> solvesList) {
-        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.clear();
-        for (int i=0; i<solvesList.size(); i++) {
-            editor.putInt(Integer.toString(i + pref.getAll().size()), solvesList.get(i));
-        }
-        editor.apply();
-    }
 
     String formatTime(int input) {
         int secs = (int) (input / 1000);
@@ -46,22 +37,35 @@ public class stats extends AppCompatActivity {
                 + ":" + String.format("%03d", mills);
     }
 
-    Integer unFormatTime(String input) {
-        String[] tokens = input.split(":");
-        int mins = Integer.parseInt(tokens[0]);
-        int secs = Integer.parseInt(tokens[1]);
-        int mills = Integer.parseInt(tokens[2]);
-        return mins * 60000 + secs * 1000 + mills;
+    void saveSolvesList(ArrayList<Integer> solvesList) {
+        SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putInt("size", solvesList.size() + pref.getInt("size", 0));
+
+        StringBuilder toSave = new StringBuilder();
+        String prefix = "";
+        for (int i=0; i<solvesList.size(); i++) {
+            toSave.append(prefix);
+            prefix = ",";
+            toSave.append(solvesList.get(i));
+        }
+
+        System.out.println(toSave);
+
+        editor.putString("list", toSave.toString());
+        editor.apply();
     }
 
     ArrayList<Integer> loadSolvesList(Integer numberOfMostRecent) {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
 
         ArrayList<Integer> toReturn = new ArrayList<>();
-        Integer startIndex = Math.max(pref.getAll().size() - numberOfMostRecent, 0);
-        for(int i = startIndex; i < pref.getAll().size(); i++)
-        {
-            toReturn.add(pref.getInt(Integer.toString(i), 0));
+        String toParse = pref.getString("list", "1337");
+        String[] tokens = toParse.split(",");
+        int startIndex = Math.max(tokens.length - numberOfMostRecent, 0);
+        for (int i = startIndex; i < tokens.length; i++) {
+            toReturn.add(Integer.parseInt(tokens[i]));
         }
         return toReturn;
     }
@@ -171,13 +175,10 @@ public class stats extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Remove item from backing list here
-                editor.remove(Integer.toString(viewHolder.getAdapterPosition()));
-                editor.apply();
-
                 solvesListString.remove(viewHolder.getAdapterPosition());
                 adapter.notifyDataSetChanged();
 
-                solvesList = loadSolvesList(1000);
+                solvesList.remove(viewHolder.getAdapterPosition());
                 averageof5value.setText(returnAverageOf(solvesList, 5));
                 averageof25value.setText(returnAverageOf(solvesList, 25));
                 averageof100value.setText(returnAverageOf(solvesList, 100));
@@ -187,16 +188,10 @@ public class stats extends AppCompatActivity {
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
-//    protected void onPause() {
-//        super.onPause();
-//        solvesList.clear();
+    protected void onPause() {
+        super.onPause();
 
-//        for (int i=0; i < solvesListString.size(); i++) {
-//            System.out.print(unFormatTime(solvesListString.get(i)));
-//            solvesList.add(unFormatTime(solvesListString.get(i)));
-//        }
-//
-//        overwriteSolvesList(solvesList);
-//    }
+        saveSolvesList(solvesList);
+    }
 
 }

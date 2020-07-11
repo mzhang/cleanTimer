@@ -147,10 +147,15 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("size", solvesList.size() + pref.getInt("size", 0));
 
         StringBuilder toSave = new StringBuilder();
+        String prefix = "";
         for (int i=0; i<solvesList.size(); i++) {
+            toSave.append(prefix);
+            prefix = ",";
             toSave.append(solvesList.get(i));
-            toSave.append(",");
         }
+
+        System.out.println(toSave);
+
         editor.putString("list", toSave.toString());
         editor.apply();
     }
@@ -227,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
 
         solvesList = loadSolvesList(5);
         displayLastFive(solvesList, displayedSolves);
-        solvesList.clear();
 
         class LayoutGestureDetector extends GestureDetector.SimpleOnGestureListener {
             @Override
