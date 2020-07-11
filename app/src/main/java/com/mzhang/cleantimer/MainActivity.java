@@ -171,8 +171,9 @@ public class MainActivity extends AppCompatActivity {
                 toReturn.add(Integer.parseInt(tokens[i]));
             }
         } catch (Exception e) {
-            toReturn.add(0);
+
         }
+
         return toReturn;
     }
 

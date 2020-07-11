@@ -59,16 +59,18 @@ public class stats extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
 
         ArrayList<Integer> toReturn = new ArrayList<>();
-        if (pref.getAll().size() == 0) {
-            toReturn.add(0);
-            return toReturn;
+
+        try {
+            String toParse = pref.getString("list", "1337");
+            String[] tokens = toParse.split(",");
+            int startIndex = Math.max(tokens.length - numberOfMostRecent, 0);
+            for (int i = startIndex; i < tokens.length; i++) {
+                toReturn.add(Integer.parseInt(tokens[i]));
+            }
+        } catch (Exception e) {
+
         }
-        String toParse = pref.getString("list", "1337");
-        String[] tokens = toParse.split(",");
-        int startIndex = Math.max(tokens.length - numberOfMostRecent, 0);
-        for (int i = startIndex; i < tokens.length; i++) {
-            toReturn.add(Integer.parseInt(tokens[i]));
-        }
+
         return toReturn;
     }
 
