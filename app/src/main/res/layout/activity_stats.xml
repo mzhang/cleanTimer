@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/bgColor"
+    android:baselineAligned="false"
     tools:context=".stats">
 
     <LinearLayout
@@ -28,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
-                android:text="Average of 5"
+                android:text="@string/averageOf5"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
-                android:text="Average of 25"
+                android:text="@string/averageOf25"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
-                android:text="Average of Career"
+                android:text="@string/averageOfCareer"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
-                android:text="Average of 100"
+                android:text="@string/averageOf100"
                 android:textColor="?attr/textColor"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -175,7 +176,7 @@
             android:layout_weight="1"
             android:background="@drawable/rounded_background"
             android:gravity="center"
-            android:text="Previous Solves\n(swipe to remove)"
+            android:text="@string/recyclerInstructions"
             android:textColor="?attr/textColor"
             android:textSize="14sp" />
 
