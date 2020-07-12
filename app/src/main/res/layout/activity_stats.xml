@@ -8,15 +8,9 @@
     android:background="?attr/bgColor"
     tools:context=".stats">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.25" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0px"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -168,14 +162,31 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0px"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_background"
+            android:gravity="center"
+            android:text="Previous Solves\n(swipe to remove)"
+            android:textColor="?attr/textColor"
+            android:textSize="14sp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="237dp"
-            android:layout_height="match_parent" />
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="10"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_background"
+            android:layout_margin="16dp"/>
 
     </LinearLayout>
 

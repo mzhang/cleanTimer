@@ -12,6 +12,7 @@ import android.view.GestureDetector;
 
 import android.view.View;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Intent;
 
@@ -295,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TextView lightSwitch = findViewById(R.id.lightSwitch);
+        ImageView lightSwitch = findViewById(R.id.lightSwitch);
         lightSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -305,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TextView discard = findViewById(R.id.discard);
+        ImageView discard = findViewById(R.id.discard);
         discard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
