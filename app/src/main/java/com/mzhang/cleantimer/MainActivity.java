@@ -262,8 +262,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                final int SWIPE_MIN_DISTANCE = 80;
-                final int SWIPE_THRESHOLD_VELOCITY = 200;
+                final int SWIPE_MIN_DISTANCE = 40;
+                final int SWIPE_THRESHOLD_VELOCITY = 100;
 
                 if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     return false; // Right to left
