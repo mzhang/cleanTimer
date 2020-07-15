@@ -1,0 +1,11 @@
+I couldn't find a single cube timer app on Google Play that is:
+
+a) not ridden with ads
+b) looks nice
+
+So I tried to make one myself! My vision was to implement the features expected of such a timer while staying true to its original purpose, including:
+
+- Allowing for 15 seconds of inspection time as per World Cube Association competition ruling
+- Generating random scrambles
+- Career statistics: recent/historical averages and ability to manage previous solves
+- A light/dark theme

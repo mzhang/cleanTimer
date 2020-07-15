@@ -1,0 +1,1 @@
+A simple timer for speedsolving Rubik's cubes and other twisty puzzles.
