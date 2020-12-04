@@ -11,7 +11,7 @@ So I tried to make my own!
 
 
 Long press anywhere to start inspection. The app will count the 15 seconds for you.
-Tap the screen when your solve is done. The timer when your finger touches the screen.
+Tap the screen when your solve is done. The timer stops when your finger touches the screen.
 
 Above the timer is a randomly generated scramble.
 Below the timer is the most recent 5 solves and below that is the average of those 5 solves.
