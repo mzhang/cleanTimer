@@ -22,3 +22,6 @@ Swipe up to access your solve statistics and view/remove your past solves! (swip
 
 
 Let me know if you have any ideas to make the app better!
+
+Now released at: 
+https://play.google.com/store/apps/details?id=com.mzhang.cleantimer
