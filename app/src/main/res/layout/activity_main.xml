@@ -17,6 +17,7 @@
         android:text="@string/_00_00_000"
         android:textColor="?attr/textColor"
         android:textSize="30sp"
+        android:keepScreenOn="true"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
