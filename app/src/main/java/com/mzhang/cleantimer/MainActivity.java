@@ -27,6 +27,31 @@ import android.annotation.SuppressLint;
 
 
 public class MainActivity extends AppCompatActivity {
+    static class Move {
+        static boolean isMirror(char move1, char move2) {
+            switch (move1) {
+                case 'L':
+                    return move2 == 'R';
+                case 'R':
+                    return move2 == 'L';
+                case 'U':
+                    return move2 == 'D';
+                case 'D':
+                    return move2 == 'U';
+                case 'F':
+                    return move2 == 'B';
+                case 'B':
+                    return move2 == 'F';
+                default:
+                    return false;
+            }
+        }
+
+        static boolean isUseless(char move, char prevMove, char prePrevMove) {
+            return (move == prevMove) || (move == prePrevMove && isMirror(move, prevMove));
+        }
+    }
+
 
     long startTime = 0;
     long recorded = 0;
@@ -70,19 +95,27 @@ public class MainActivity extends AppCompatActivity {
         String textBox = "";
         char[] moves = {'U', 'R', 'F', 'D', 'L', 'B'};
         int numberOfMoves = rand.nextInt(6) + 20; //rand # 20..25
+        char prevMove = '0';
+        char prePrevMove = '0';
 
         for (int i = 0; i < numberOfMoves; i++) {
-            int moveKey = rand.nextInt(6);
-            int moveType = rand.nextInt(4);
+            int moveKey;
+            do {
+                moveKey = rand.nextInt(6);
+            } while (Move.isUseless(moves[moveKey], prevMove, prePrevMove));
+            prePrevMove = prevMove;
+            prevMove = moves[moveKey];
+            textBox += moves[moveKey];
+
+            int moveType = rand.nextInt(3);
             switch (moveType) {
                 case 0:
-                    textBox += moves[moveKey] + "'";
+                    textBox += "'";
                     break;
                 case 1:
-                    textBox += moves[moveKey] + "2";
+                    textBox += "2";
                     break;
                 default:
-                    textBox += moves[moveKey];
                     break;
             }
             textBox += " ";
