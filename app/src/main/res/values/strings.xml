@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Clean Timer</string>
-    <string name="_00_00_000">00:00:000</string>
+    <string name="_00_00_000">00:00.000</string>
     <string name="averageOf5">Average of 5</string>
     <string name="averageOf25">Average of 25</string>
     <string name="averageOf100">Average of 100</string>
