@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             recorded = (System.nanoTime() - startTime) / 1000000;
             time = (int) recorded;
-            timer.setText(formatTime(time));
+            timer.setText(Common.formatTime(time));
             handler.postDelayed(this, 0);
         }
     };
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 startMainTimer();
                 handler.removeCallbacks(updateInspectTimer);
             } else {
-                timer.setText(formatTime(time));
+                timer.setText(Common.formatTime(time));
                 handler.postDelayed(this, 0);
             }
         }
@@ -123,15 +123,6 @@ public class MainActivity extends AppCompatActivity {
         return textBox;
     }
 
-    String formatTime(int input) {
-        int secs = (int) (input / 1000);
-        int mins = secs / 60;
-        secs %= 60;
-        int mills = (int) (input % 1000);
-        return String.format("%02d", mins) + ":" + String.format("%02d", secs)
-                + ":" + String.format("%03d", mills);
-    }
-
     int listAverage(List<Integer> inputList) {
         double sum = 0;
         for (Integer value : inputList) {
@@ -149,10 +140,10 @@ public class MainActivity extends AppCompatActivity {
         List<Integer> lastFiveList = solvesList.subList(Math.max(solvesList.size() - 5, 0), solvesList.size());
 
         if (lastFiveList.size() > 0) {
-            lastFiveAverage.setText(formatTime(listAverage(lastFiveList)));
+            lastFiveAverage.setText(Common.formatTime(listAverage(lastFiveList)));
             String toPrint = "";
             for (int i = 0; i < lastFiveList.size(); i++) {
-                toPrint += formatTime((lastFiveList.get(i))) + "\n";
+                toPrint += Common.formatTime((lastFiveList.get(i))) + "\n";
                 displayedSolves.setText(toPrint);
             }
         } else {

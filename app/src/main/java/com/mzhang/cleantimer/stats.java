@@ -26,16 +26,6 @@ public class stats extends AppCompatActivity {
 
     GestureDetector detector;
 
-
-    String formatTime(int input) {
-        int secs = (int) (input / 1000);
-        int mins = secs / 60;
-        secs %= 60;
-        int mills = (int) (input % 1000);
-        return String.format("%02d", mins) + ":" + String.format("%02d", secs)
-                + ":" + String.format("%03d", mills);
-    }
-
     void saveSolvesList(ArrayList<Integer> solvesList) {
         SharedPreferences pref = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -85,7 +75,7 @@ public class stats extends AppCompatActivity {
 
     String returnAverageOf(List<Integer> inputList, int range) {
         List sublist = inputList.subList(Math.max(inputList.size() - range, 0), inputList.size());
-        return formatTime(listAverage(sublist));
+        return Common.formatTime(listAverage(sublist));
     }
 
     @Override
@@ -144,13 +134,13 @@ public class stats extends AppCompatActivity {
         averageof5value.setText(returnAverageOf(solvesList, 5));
         averageof25value.setText(returnAverageOf(solvesList, 25));
         averageof100value.setText(returnAverageOf(solvesList, 100));
-        averageofcareervalue.setText(formatTime(listAverage(solvesList)));
+        averageofcareervalue.setText(Common.formatTime(listAverage(solvesList)));
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         final ArrayList<String> solvesListString = new ArrayList<String>();
         for (int i=0; i < solvesList.size(); i++) {
-            solvesListString.add(formatTime(solvesList.get(i)));
+            solvesListString.add(Common.formatTime(solvesList.get(i)));
         }
 
         SharedPreferences solvesMasterList = getSharedPreferences("com.mzhang.cleantimer.solvesList", Context.MODE_PRIVATE);
@@ -176,7 +166,7 @@ public class stats extends AppCompatActivity {
                 averageof5value.setText(returnAverageOf(solvesList, 5));
                 averageof25value.setText(returnAverageOf(solvesList, 25));
                 averageof100value.setText(returnAverageOf(solvesList, 100));
-                averageofcareervalue.setText(formatTime(listAverage(solvesList)));
+                averageofcareervalue.setText(Common.formatTime(listAverage(solvesList)));
             }
         });
 
